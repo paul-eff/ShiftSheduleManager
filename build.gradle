@@ -1,0 +1,33 @@
+plugins {
+    id 'application'
+}
+
+group 'me.paulferlitz'
+version '1.0-SNAPSHOT'
+
+application {
+    getMainClass().set("me.paulferlitz.Main")
+}
+
+task customFatJar(type: Jar) {
+    manifest {
+        attributes "Main-Class": "me.paulferlitz.Main"
+    }
+    archiveBaseName = "all-in-one-jar"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
